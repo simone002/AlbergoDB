@@ -1,0 +1,36 @@
+CREATE DEFINER = CURRENT_USER TRIGGER `Albergo`.`VerificaPrezzoStanza` BEFORE INSERT ON `TipiDiStanze` FOR EACH ROW
+	BEGIN
+	    IF NEW.costo < 0 THEN
+	       SET NEW.costo = 0;
+	    END IF;
+	END
+	  
+CREATE DEFINER = CURRENT_USER TRIGGER `Albergo`.`VerificaPrezzoServizio` BEFORE INSERT ON `ServiziAlbergo` FOR EACH ROW
+	BEGIN
+	   IF NEW.costo < 0 THEN
+		SET NEW.costo = 0;
+	   END IF;
+	END
+
+
+CREATE DEFINER = CURRENT_USER TRIGGER `Albergo`.`VerificaPrezzoPrenotazione` BEFORE INSERT ON `Prenotazione` FOR EACH ROW
+	BEGIN
+	    IF NEW.costoTotale < 0 THEN
+	       SET NEW.costoTotale = 0;
+	    END IF;
+	END
+
+
+CREATE DEFINER = CURRENT_USER TRIGGER `Albergo`.`VerificaCheckIn` BEFORE INSERT ON `Prenotazione` FOR EACH ROW
+	BEGIN
+	    IF NEW.checkIn < date(now()) THEN
+	       SET NEW.checkIn = date(now());
+	    END IF;
+	END
+
+CREATE DEFINER = CURRENT_USER TRIGGER `Albergo`.`checkDisponibilità` BEFORE INSERT ON `Prenotazione` FOR EACH ROW
+BEGIN
+DECLARE disponibile INT;
+SELECT disponibile INTO disponibile
+FROM Stanze;
+END

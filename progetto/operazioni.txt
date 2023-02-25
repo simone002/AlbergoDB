@@ -1,0 +1,78 @@
+INSERT INTO `Recensioni`(`idRecensione`,`testo`) VALUES
+(1,'ottimo servizio');
+
+
+
+INSERT INTO `Albergo` (`idAlbergo`,`nome`,`numeroTelefono`, `email` , `descrizione`, `numeroStanze`, `idRecensione`) VALUES
+(1,'Hotel excelsior', '1236738272', 'hotelexcelsior@gmail.com', 'albergo di lusso a 5 stelle situata nella regione di sicilia occidentale a Palermo, con stanze pulite e accoglienti',50,1);
+
+
+INSERT INTO `Ospiti` (`idOspite`, `nome`, `cognome`, `numeroTelefono`, `email`, `tipoPagamento`) VALUES
+(1, 'Simone', 'Battiato', '2287637275', 'simone@gmail.com', 'contanti'),
+(2, 'Attilio', 'Spampinato', '2287637276', 'Attilio@gmail.com', 'bancomat'),
+(3, 'Alfio', 'Spoto', '2287637277', 'Alfio@gmail.com', 'contanti'),
+(4, 'Ksenia', 'Egorova', '228763728', 'Ksenia@gmail.com', 'contanti');
+
+
+INSERT INTO `ServiziAlbergo` (`idServizio`, `nome`, `descrizione`, `costo`, `idAlbergo`,`idRecensione`) VALUES
+(1,'Ristorante', 'Colazione, Pranzo, Cena.. colazione compresa nella prenotazione; costo al giorno', '10.00',1,1),
+(2,'Palestra', 'sala pesi, corsi aerobica, box e tanto altro; costo al girno', '20.00',1,1),
+(3,'Spa', 'spa,bagno turco, piscina e trattamenti di bellezza; costo al giorno', '40.00',1,1),
+(4,'Bar', 'cocktail, caffè ecc; costo incluso nella prenotazione', '0.00',1,1),
+(5,'Sala gioco', 'poker, gioco slot machine e altro; costo al giorno', '0.00',1,1),
+(6, 'Parcheggio', 'parcheggio auto;costo al giorno', '5.00',1,1);
+
+
+INSERT INTO `CategoriaSala`(`idCategoriaSala`,`nome`,`descrizione`) VALUES
+(1,'Ristorante', 'Colazione, Pranzo, Cena'),
+(2,'SPA', 'Bagno Turco, Piscina, benessere'),
+(3,'Bar', 'cocktail e caffè'),
+(4,'Palestra', 'sala pesi, aerobica');
+
+
+INSERT INTO `Impiegati` ( `idImpiegato`, `nome`, `cognome`, `salario`, `numeroTelefono`, `email`, `idAlbergo`, `idIndirizzo`, `idCategoriaSala`) VALUES
+(1, 'Giovanni','Battiato', '1000.00', '345758495', 'Giovanni@gmail.com', 1, 1, 1),
+(2, 'Pippo','Savanarola', '1500.00', '345758494', 'Giovanni@gmail.com', 1, 1, 2),
+(3, 'Salvo','Bottino', '700.00', '345758491', 'Giovanni@gmail.com', 1, 1, 3),
+(4, 'Chiara','Mignemi', '1000.00', '345758490', 'Giovanni@gmail.com', 1, 1, 4);
+
+
+INSERT INTO `Prenotazione` (`idPrenotazione`, `dataPrenotazione`, `durata`, `checkIn`, `checkOut`, `costoTotale`, `totaleStanzePrenotate`, `tipoPagamento`, `idAlbergo`, `idOspite`, `idImpiegato`) VALUES
+(1, '2023-10-10 10:00:00', '5 giorni', '2023-12-13 18:00:00', '2023-12-18 17:00:00', '550.50', 2, 'cartaprepagata', 1,4,4),
+(2, '2023-08-10 15:00:00', '10 giorni', '2023-08-20 10:00:00', '2023-08-30 19:00:00', '1000.50', 3, 'contanti', 1,4,4),
+(3, '2023-09-12 10:00:00', '5 giorni', '2023-11-23 18:00:00', '2023-11-28 17:00:00', '300.00', 2, 'cartaprepagata', 1,4,4);
+
+
+SELECT nome, cognome, numeroTelefono
+FROM Ospiti
+WHERE idOspite IN( SELECT DISTINCT idOspite
+		   FROM Prenotazione
+		   WHERE DAY(checkIn) = 13 AND MONTH(checkIn) = 12 AND YEAR(checkIn) = 2023);
+
+
+SELECT count(*) AS 'Totale prenotazioni'
+FROM Prenotazione
+WHERE YEAR(dataPrenotazione) = 2023 AND idOspite = 4;
+
+
+SELECT a.numeroStanze - SUM(p.totaleStanzePrenotate) AS 'Numero stanze disponibili'
+FROM Albergo a, Prenotazione p
+WHERE a.idAlbergo = p.idALbergo AND p.dataPrenotazione LIKE '2023-12-13%' AND p.idAlbergo = 4;
+
+SELECT idOspite, costoTotale
+FROM Prenotazioni
+WHERE idOspite = 4;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
